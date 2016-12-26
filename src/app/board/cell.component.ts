@@ -1,33 +1,37 @@
-import { Component } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Game} from '../';
 
 @Component({
   selector: 'app-cell',
   template: '<td (click)="putXorO()">{{cellvalue}}</td>',
   styles: ['td { text-align: center; height: 20px; width: 20px; background-color: lightblue; border-style: solid; border-width: 1px;}']
 })
-export class CellComponent  {
-   cellvalue = '.';
-   isXNext: boolean  = true;
+export class CellComponent implements OnInit {
+  cellvalue = '.';
 
-   putXorO() {
-     if(this.cellvalue != '.'){
-       return;
-     }
-     if(this.isXNext == true){
-       this.isXNext = false;
-       this.putX();
-     } else {
-       this.isXNext = true;
-       this.putY();
-     }
-   }
+  ngOnInit() {
+    console.log("CELL INIT: " + Game.getNextMove());
+  }
 
-   putX() {
-     this.cellvalue = ' X ';
-     console.log("Am apasat pe X");
-   }
+  putXorO() {
+    if (this.cellvalue != '.') {
+      return;
+    }
+    if (Game.getNextMove() == 'X') {
+      this.putX();
+    } else {
+      this.putO();
+    }
+  }
 
-   putY() {
-     this.cellvalue = ' O ';
-   }
+  putX() {
+    this.cellvalue = 'X';
+    console.log("Am apasat pe X");
+    Game.setNextMove('Y');
+  }
+
+  putO() {
+    this.cellvalue = 'O';
+    Game.setNextMove('X');
+  }
 }
